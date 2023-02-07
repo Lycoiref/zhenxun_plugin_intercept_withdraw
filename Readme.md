@@ -10,4 +10,4 @@ __本插件主要用于监听群组内的消息：__
 
 ## 插件引入
 
-将插件文件夹（intercept_withdraw文件夹）放入extensive_plugins目录下（每次更新后需要重新引入）
+将插件文件夹（intercept_withdraw文件夹）放入extensive_plugins目录下
