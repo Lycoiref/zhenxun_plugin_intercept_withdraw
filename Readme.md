@@ -10,9 +10,4 @@ __本插件主要用于监听群组内的消息：__
 
 ## 插件引入
 
-1. 将插件文件夹（intercept_withdraw文件夹）放入plugins目录下（每次更新后需要重新引入）
-2. 在bot根目录下新建my_plugins文件夹，将插件放入该文件夹并在`bot.py`中添加  
-```python
-nonebot.load_plugins("my_plugins")
-```
-***`my_plugins`可更换为任意名字，但应与load_plugins中的名字一致***
+将插件文件夹（intercept_withdraw文件夹）放入extensive_plugins目录下（每次更新后需要重新引入）
