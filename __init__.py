@@ -1,14 +1,10 @@
 # 通过将撤回的消息发送给超级用户，让超级用户处理撤回的消息
 import json
 
-from nonebot import get_bot
-from nonebot.log import logger
 from nonebot import on_message, on_notice
-from nonebot.adapters.onebot.v11 import Bot, MessageEvent, Message, GroupMessageEvent, GroupRecallNoticeEvent
-from nonebot.params import CommandArg
-from utils.utils import get_message_img
+from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, GroupRecallNoticeEvent
 
-# 真寻规范
+# Chiya规范
 __zx_plugin_name__ = "消息防撤回"
 __plugin_usage__ = """
 usage：
@@ -18,14 +14,8 @@ usage：
     ————麻麻再也不怕我错过群里的女装照片了！
 """.strip()
 __plugin_des__ = "保存撤回的消息，收到闪照时，将闪照发送给超级用户"
-__plugin_settings__ = {
-    "limit_superuser": True,
-    "cmd": ["防撤回", "闪照解析"],
-}
-__plugin_type__ = ("常规插件",)
-__plugin_version__ = 0.1
-__plugin_author__ = "HDU_Nbsp"
-__plugin_task__ = {"intercept_withdraw", "消息防撤回"}
+__plugin_version__ = 0.2
+__plugin_author__ = "Lycoiref"
 
 if_withdraw = on_notice(priority=1, block=False)
 flash_pic = on_message(priority=1, block=False)  # 闪照事件监听
@@ -33,7 +23,8 @@ flash_pic = on_message(priority=1, block=False)  # 闪照事件监听
 
 # 检测撤回消息
 @if_withdraw.handle()
-async def if_withdraw_handle(bot: Bot, event: GroupRecallNoticeEvent):  # 此处event不知道应该调用哪个，所以暂时不用
+# 此处event不知道应该调用哪个，所以暂时不用
+async def if_withdraw_handle(bot: Bot, event: GroupRecallNoticeEvent):
     if event.notice_type == "group_recall":
         # 获取撤回消息的消息id
         recall_message_id = event.message_id
