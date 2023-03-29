@@ -28,6 +28,10 @@ async def if_withdraw_handle(bot: Bot, event: GroupRecallNoticeEvent):
         # 获取撤回用户的群昵称
         recall_user_name = await bot.get_group_member_info(group_id=event.group_id, user_id=event.user_id)
         recall_user_name = recall_user_name["card"]
+        # 获取撤回用户的QQ昵称
+        if recall_user_name == "":
+            recall_user_name = await bot.get_stranger_info(user_id=event.user_id)
+            recall_user_name = recall_user_name["nickname"]
         # 获取群聊名称
         group_name = await bot.get_group_info(group_id=event.group_id)
         group_name = group_name["group_name"]
