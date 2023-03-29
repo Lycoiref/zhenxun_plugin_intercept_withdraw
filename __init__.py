@@ -14,7 +14,7 @@ usage：
     ————麻麻再也不怕我错过群里的女装照片了！
 """.strip()
 __plugin_des__ = "保存撤回的消息，收到闪照时，将闪照发送给超级用户"
-__plugin_version__ = 0.2
+__plugin_version__ = 0.3
 __plugin_author__ = "Lycoiref"
 
 if_withdraw = on_notice(priority=1, block=False)
@@ -23,9 +23,14 @@ flash_pic = on_message(priority=1, block=False)  # 闪照事件监听
 
 # 检测撤回消息
 @if_withdraw.handle()
-# 此处event不知道应该调用哪个，所以暂时不用
 async def if_withdraw_handle(bot: Bot, event: GroupRecallNoticeEvent):
     if event.notice_type == "group_recall":
+        # 获取撤回用户的群昵称
+        recall_user_name = await bot.get_group_member_info(group_id=event.group_id, user_id=event.user_id)
+        recall_user_name = recall_user_name["card"]
+        # 获取群聊名称
+        group_name = await bot.get_group_info(group_id=event.group_id)
+        group_name = group_name["group_name"]
         # 获取撤回消息的消息id
         recall_message_id = event.message_id
         # 获取撤回消息的消息内容
@@ -35,7 +40,7 @@ async def if_withdraw_handle(bot: Bot, event: GroupRecallNoticeEvent):
         for superuser in bot.config.superusers:
             await bot.send_private_msg(
                 user_id=superuser,
-                message=f"{event.user_id} 在群聊 {event.group_id} 撤回了一条消息\n"
+                message=f"{recall_user_name} ({event.user_id}) \n在群聊\n {group_name} ({event.group_id})\n撤回了一条消息\n"
                         f"撤回消息内容：\n{recall_message_content['message']}"
             )
 
@@ -43,6 +48,9 @@ async def if_withdraw_handle(bot: Bot, event: GroupRecallNoticeEvent):
 # 检测闪照
 @flash_pic.handle()
 async def if_withdraw_handle(bot: Bot, event: GroupMessageEvent):
+    # 获取群聊名称
+    group_name = await bot.get_group_info(group_id=event.group_id)
+    group_name = group_name["group_name"]
     # 检测是否是闪照
     message_dict = json.loads(event.json())
     print(message_dict)
@@ -73,7 +81,7 @@ async def if_withdraw_handle(bot: Bot, event: GroupMessageEvent):
         for superuser in bot.config.superusers:
             await bot.send_private_msg(
                 user_id=superuser,
-                message=f"收到来自群{message_dict['group_id']}的闪照"
+                message=f"收到来自群{group_name} ({message_dict['group_id']})的闪照"
             )
             await bot.send_private_msg(
                 user_id=superuser,
